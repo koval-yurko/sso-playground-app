@@ -2,6 +2,17 @@
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
+  hooks: {
+    'prerender:routes': ({ routes }) => {
+      routes.clear()
+    },
+  },
+
+  devServer: {
+    port: 3000,
+  },
+
+  ssr: false,
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
@@ -10,12 +21,12 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     '@nuxt/test-utils',
     '@nuxt/ui',
-    '@nuxt/eslint'
+    '@nuxt/eslint',
   ],
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
   },
 
-  css: ['~/assets/css/main.css']
+  css: ['~/assets/css/main.css'],
 })
