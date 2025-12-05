@@ -39,8 +39,6 @@ export function getFirestoreDB() {
 
   const config = useRuntimeConfig()
 
-  console.log('config.firestoreDatabaseId', config.firestoreDatabaseId)
-
   db = getFirestore(app, config.firestoreDatabaseId)
   console.log('✓ Firestore instance created for database:', config.firestoreDatabaseId)
   return db

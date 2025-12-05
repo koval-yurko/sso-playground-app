@@ -6,7 +6,7 @@ const errorMessage = ref('')
 const successMessage = ref('')
 
 // Fetch items from Firestore
-const { data: itemsData, refresh: refreshItems } = await useFetch('/api/items')
+const { data: itemsData, refresh: refreshItems } = await useFetch('/api/settings')
 
 // Add new item
 async function addItem() {
@@ -20,7 +20,7 @@ async function addItem() {
   successMessage.value = ''
 
   try {
-    await $fetch('/api/items', {
+    await $fetch('/api/settings', {
       method: 'POST',
       body: {
         name: name.value,
@@ -73,7 +73,7 @@ async function addItem() {
           Add New Item
         </h2>
 
-        <form @submit.prevent="addItem" class="space-y-4">
+        <form class="space-y-4" @submit.prevent="addItem">
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
               Name *
@@ -123,11 +123,11 @@ async function addItem() {
       <div class="bg-white rounded-lg shadow-md p-6">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-semibold text-gray-900">
-            Items List ({{ itemsData?.count || 0 }})
+            Settings List ({{ itemsData?.items?.length || 0 }})
           </h2>
           <button
-            @click="refreshItems"
             class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            @click="refreshItems"
           >
             Refresh
           </button>
@@ -148,12 +148,15 @@ async function addItem() {
                 <h3 class="font-semibold text-gray-900">
                   {{ item.name }}
                 </h3>
-                <p v-if="item.description" class="text-gray-600 text-sm mt-1">
-                  {{ item.description }}
+                <p v-if="item.key" class="text-gray-600 text-sm mt-1">
+                  {{ item.key }}
+                </p>
+                <p v-if="item.enabled" class="text-gray-600 text-sm mt-1">
+                  {{ item.enabled }}
                 </p>
               </div>
               <div class="text-xs text-gray-500 ml-4">
-                {{ new Date(item.createdAt).toLocaleString() }}
+                {{ item.type }}
               </div>
             </div>
             <div class="text-xs text-gray-400 mt-2">
