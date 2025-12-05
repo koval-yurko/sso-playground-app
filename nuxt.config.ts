@@ -2,6 +2,10 @@
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
+  nitro: {
+    preset: 'firebase_app_hosting',
+  },
+
   hooks: {
     'prerender:routes': ({ routes }) => {
       routes.clear()
