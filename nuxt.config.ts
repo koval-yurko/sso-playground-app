@@ -33,4 +33,8 @@ export default defineNuxtConfig({
   },
 
   css: ['~/assets/css/main.css'],
+
+  runtimeConfig: {
+    firestoreDatabaseId: '', // NUXT_FIRESTORE_DATABASE_ID
+  },
 })

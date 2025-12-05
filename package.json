@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "eslint --fix ."
+    "lint": "eslint --fix .",
+    "firebase:emulators": "firebase emulators:start --project sso-playground-b2050"
   },
   "dependencies": {
     "@nuxt/eslint": "^1.11.0",
@@ -18,6 +19,7 @@
     "@nuxt/ui": "^4.2.1",
     "@unhead/vue": "^2.0.19",
     "eslint": "^9.39.1",
+    "firebase-admin": "^13.6.0",
     "nuxt": "^4.2.1",
     "typescript": "^5.9.3",
     "vue": "^3.5.25",
