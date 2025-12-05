@@ -1,0 +1,11 @@
+runConfig:
+  cpu: 1
+  memoryMiB: 512
+  concurrency: 5
+
+env:
+  - variable: NUXT_FIRESTORE_DATABASE_ID
+    value: sso-playground-db
+    availability:
+     - BUILD
+     - RUNTIME
