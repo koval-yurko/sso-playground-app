@@ -12,6 +12,10 @@ export class SettingsService {
     return this.settingsRepository.getList(type)
   }
 
+  getByKey(key: string) {
+    return this.settingsRepository.getByKey(key)
+  }
+
   create(data: SettingsCreateDTO) {
     return this.settingsRepository.create(data)
   }
