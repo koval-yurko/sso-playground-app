@@ -16,22 +16,20 @@ export function getFirestoreDB() {
   }
 
   if (!app) {
-    try {
-      // Try to load service account key for local development
-      const serviceAccountPath = path.join(process.cwd(), 'serviceAccountKey.json')
-      const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'))
+    // Try to load service account key for local development
+    const serviceAccountPath = path.join(process.cwd(), 'serviceAccountKey.json')
 
+    if (fs.existsSync(serviceAccountPath)) {
+      // Local development: Use service account key
+      const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'))
       console.log('✓ Loading service account for project:', serviceAccount.project_id)
 
       app = initializeApp({
         credential: cert(serviceAccount),
       })
       console.log('✓ Firebase initialized with service account')
-    } catch (error) {
-      // Fallback: Use default credentials (works in Firebase App Hosting)
-      console.error('Failed to load service account:', error)
-
-      // Get projectId from runtime config (FIREBASE_CONFIG env var)
+    } else {
+      // Production/Firebase App Hosting: Use default credentials
       const config = useRuntimeConfig()
       const firebaseConfig = config.firebaseConfig
         ? JSON.parse(config.firebaseConfig)
@@ -45,8 +43,6 @@ export function getFirestoreDB() {
   }
 
   const config = useRuntimeConfig()
-
-  console.log('config.testSecret', config.testSecret)
 
   db = getFirestore(app, config.firestoreDatabaseId)
   console.log('✓ Firestore instance created for database:', config.firestoreDatabaseId)
