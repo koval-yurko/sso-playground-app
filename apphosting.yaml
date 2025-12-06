@@ -9,3 +9,8 @@ env:
     availability:
      - BUILD
      - RUNTIME
+  - variable: NUXT_TEST_SECRET
+    secret: TEST_SECRET
+    availability:
+      - BUILD
+      - RUNTIME

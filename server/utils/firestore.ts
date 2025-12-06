@@ -28,16 +28,25 @@ export function getFirestoreDB() {
       })
       console.log('✓ Firebase initialized with service account')
     } catch (error) {
-      // Fallback: Use default credentials (works in Firebase Functions)
+      // Fallback: Use default credentials (works in Firebase App Hosting)
       console.error('Failed to load service account:', error)
+
+      // Get projectId from runtime config (FIREBASE_CONFIG env var)
+      const config = useRuntimeConfig()
+      const firebaseConfig = config.firebaseConfig
+        ? JSON.parse(config.firebaseConfig)
+        : undefined
+
       app = initializeApp({
-        projectId: 'sso-playground-b2050',
+        projectId: firebaseConfig?.projectId,
       })
-      console.log('✓ Firebase initialized with default credentials')
+      console.log('✓ Firebase initialized with default credentials for project:', firebaseConfig?.projectId)
     }
   }
 
   const config = useRuntimeConfig()
+
+  console.log('config.testSecret', config.testSecret)
 
   db = getFirestore(app, config.firestoreDatabaseId)
   console.log('✓ Firestore instance created for database:', config.firestoreDatabaseId)

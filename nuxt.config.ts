@@ -35,6 +35,8 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   runtimeConfig: {
+    testSecret: '', // NUXT_TEST_SECRET
     firestoreDatabaseId: '', // NUXT_FIRESTORE_DATABASE_ID
+    firebaseConfig: process.env.FIREBASE_CONFIG || '', // FIREBASE_CONFIG (no NUXT_ prefix)
   },
 })
