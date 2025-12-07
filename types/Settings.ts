@@ -12,15 +12,17 @@ interface SettingsBase {
   name: string
   key: string
   enabled: boolean
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Settings extends SettingsBase {
   id: SettingId
 }
 
-export interface SettingsCreateDTO extends Omit<SettingsBase, 'key'> {
+export interface SettingsCreateDTO extends Omit<SettingsBase, 'key' | 'createdAt' | 'updatedAt'> {
   key?: string
 }
 
-export type SettingsUpdateDTO = Partial<SettingsBase>
+export type SettingsUpdateDTO = Partial<Omit<SettingsBase, 'createdAt' | 'updatedAt'>>
 

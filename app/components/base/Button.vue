@@ -2,12 +2,13 @@
 import type { ButtonHTMLAttributes } from 'vue'
 
 interface ButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'secondary' | 'danger'
 }
 
 const variants = {
   primary: 'border-transparent bg-blue-600 enabled:hover:bg-blue-700 focus:ring-blue-500 text-white',
   secondary: 'border-gray-300 bg-white enabled:hover:bg-gray-50 focus:ring-blue-500 text-gray-700',
+  danger: 'border-transparent bg-red-600 enabled:hover:bg-red-700 focus:ring-red-500 text-white',
 }
 
 const props = defineProps<ButtonProps>()

@@ -1,6 +1,7 @@
 import type { SettingsRepository } from '~~/types/SettingsRepository'
 import type { Settings, SettingId, SettingsCreateDTO, SettingsUpdateDTO, SettingType } from '~~/types/Settings'
 import { getFirestoreDB } from '../utils/firestore'
+import { FieldValue } from 'firebase-admin/firestore'
 
 export class FirestoreSettingsRepository implements SettingsRepository {
   private readonly collectionName = 'settings'
@@ -10,6 +11,7 @@ export class FirestoreSettingsRepository implements SettingsRepository {
     const snapshot = await db
       .collection(this.collectionName)
       .where('type', '==', type)
+      .orderBy('createdAt', 'asc')
       .get()
 
     return snapshot.docs.map(doc => ({
@@ -39,7 +41,15 @@ export class FirestoreSettingsRepository implements SettingsRepository {
 
   async create(data: SettingsCreateDTO): Promise<Settings> {
     const db = getFirestoreDB()
-    const docRef = await db.collection(this.collectionName).add(data)
+
+    const now = FieldValue.serverTimestamp()
+    const docData = {
+      ...data,
+      createdAt: now,
+      updatedAt: now,
+    }
+
+    const docRef = await db.collection(this.collectionName).add(docData)
     const doc = await docRef.get()
 
     return {
@@ -52,7 +62,12 @@ export class FirestoreSettingsRepository implements SettingsRepository {
     const db = getFirestoreDB()
     const docRef = db.collection(this.collectionName).doc(id)
 
-    await docRef.update(data)
+    const updateData = {
+      ...data,
+      updatedAt: FieldValue.serverTimestamp(),
+    }
+
+    await docRef.update(updateData)
     const doc = await docRef.get()
 
     if (!doc.exists) {
