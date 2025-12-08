@@ -8,6 +8,7 @@ export type SettingType = (typeof SettingTypes)[keyof typeof SettingTypes];
 export type SettingId = string;
 
 interface SettingsBase {
+  id: SettingId
   type: SettingType
   name: string
   key: string
@@ -16,13 +17,30 @@ interface SettingsBase {
   updatedAt: string
 }
 
-export interface Settings extends SettingsBase {
-  id: SettingId
+export type Settings = OpenIDSettings | SAMLSettings;
+
+export interface OpenIDSettings extends SettingsBase {
+  type: 'openid';
+  discoveryEndpoint?: string;
+  clientId?: string;
+  clientSecret?: string;
+  prompt?: string;
 }
 
-export interface SettingsCreateDTO extends Omit<SettingsBase, 'key' | 'createdAt' | 'updatedAt'> {
+export interface OpenIDSettingsCreateDTO extends Omit<OpenIDSettings, 'id' | 'key' | 'createdAt' | 'updatedAt'> {
   key?: string
 }
 
-export type SettingsUpdateDTO = Partial<Omit<SettingsBase, 'createdAt' | 'updatedAt'>>
+export type OpenIDSettingsUpdateDTO = Partial<Omit<OpenIDSettings, 'id' | 'createdAt' | 'updatedAt'>>
 
+
+export interface SAMLSettings extends SettingsBase {
+  type: 'saml';
+  metadataURL?: string;
+}
+
+export interface SAMLSettingsCreateDTO extends Omit<SAMLSettings, 'id' | 'key' | 'createdAt' | 'updatedAt'> {
+  key?: string
+}
+
+export type SAMLSettingsUpdateDTO = Partial<Omit<SAMLSettings, 'id' | 'createdAt' | 'updatedAt'>>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Settings, SettingsCreateDTO, SettingsUpdateDTO } from '~~/types/Settings'
+import type { OpenIDSettings, OpenIDSettingsCreateDTO, OpenIDSettingsUpdateDTO } from '~~/types/Settings'
 
 interface SettingsListResponse {
-  items: Settings[]
+  items: OpenIDSettings[]
 }
 
 const { data: itemsData, refresh: refreshItems } = await useFetch<SettingsListResponse>('/api/settings?type=openid')
@@ -32,7 +32,7 @@ const handleCreateCancel = () => {
   isCreateActivated.value = false
 }
 
-const handleCreateSubmit = async (data: SettingsCreateDTO) => {
+const handleCreateSubmit = async (data: OpenIDSettingsCreateDTO) => {
   await $fetch('/api/settings', {
     method: 'POST',
     body: data,
@@ -41,7 +41,7 @@ const handleCreateSubmit = async (data: SettingsCreateDTO) => {
   isCreateActivated.value = false
 }
 
-const handleUpdateSubmit = async (id: string, data: SettingsUpdateDTO) => {
+const handleUpdateSubmit = async (id: string, data: OpenIDSettingsUpdateDTO) => {
   await $fetch(`/api/settings/${id}`, {
     method: 'PATCH',
     body: data,

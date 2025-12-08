@@ -16,16 +16,21 @@ const model = defineModel<string>()
 
 const attrs = useAttrs()
 
+const isRequired = computed(() => {
+  return typeof attrs.required !== 'undefined' && (attrs.required === '' || attrs.required === true)
+})
+
+const isReadonly = computed(() => {
+  return typeof attrs.readonly !== 'undefined' && (attrs.readonly === '' || attrs.readonly === true)
+})
+
 const inputClasses = computed(() => {
   return [
     'appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 bg-white text-gray-900 sm:text-sm',
     'focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10',
-    'enabled:cursor-pointer disabled:opacity-50',
+    'disabled:opacity-50',
+    isReadonly.value ? '!bg-transparent' : '',
   ].filter(Boolean).join(' ')
-})
-
-const isRequired = computed(() => {
-  return typeof attrs.required !== 'undefined' && (attrs.required === '' || attrs.required === true)
 })
 
 </script>

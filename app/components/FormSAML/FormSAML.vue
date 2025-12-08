@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { OpenIDSettings, OpenIDSettingsCreateDTO, OpenIDSettingsUpdateDTO } from '~~/types/Settings'
+import type { SAMLSettings, SAMLSettingsCreateDTO, SAMLSettingsUpdateDTO } from '~~/types/Settings'
 
 interface Props {
-  item?: OpenIDSettings | null
+  item?: SAMLSettings | null
   mode?: 'create' | 'edit'
 }
 
@@ -12,8 +12,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  'submit-create': [data: OpenIDSettingsCreateDTO],
-  'submit-update': [data: OpenIDSettingsUpdateDTO],
+  'submit-create': [data: SAMLSettingsCreateDTO],
+  'submit-update': [data: SAMLSettingsUpdateDTO],
   'submit-delete': [],
   'cancel': []
 }>()
@@ -21,10 +21,7 @@ const emit = defineEmits<{
 const formData = ref({
   name: props.item?.name || '',
   key: props.item?.key || '',
-  discoveryEndpoint: props.item?.discoveryEndpoint || '',
-  clientId: props.item?.clientId || '',
-  clientSecret: props.item?.clientSecret || '',
-  prompt: props.item?.prompt || '',
+  metadataURL: props.item?.metadataURL || '',
   enabled: props.item?.enabled ?? true,
 })
 
@@ -33,7 +30,13 @@ const isKeyManuallyEdited = ref(!!props.item?.key)
 const redirectUrl = computed(() => {
   const key = formData.value.key || generateKey(formData.value.name)
   const baseUrl = useRuntimeConfig().public.baseUrl || window.location.origin
-  return `${baseUrl}/auth/openid/${key}/callback`
+  return `${baseUrl}/auth/saml/${key}/acs`
+})
+
+const entityId = computed(() => {
+  const key = formData.value.key || generateKey(formData.value.name)
+  const baseUrl = useRuntimeConfig().public.baseUrl || window.location.origin
+  return `${baseUrl}/auth/saml/${key}/metadata`
 })
 
 watch(() => formData.value.name, (newName) => {
@@ -53,8 +56,8 @@ const handleKeyInput = () => {
 }
 
 const handleSubmit = () => {
-  const data: OpenIDSettingsCreateDTO | OpenIDSettingsUpdateDTO = {
-    type: 'openid',
+  const data: SAMLSettingsCreateDTO | SAMLSettingsUpdateDTO = {
+    type: 'saml',
     name: formData.value.name,
     key: formData.value.key || generateKey(formData.value.name),
     discoveryEndpoint: formData.value.discoveryEndpoint,
@@ -91,10 +94,10 @@ const handleDiscard = () => {
   <div class="space-y-6">
     <div>
       <h3 class="text-lg font-medium text-gray-900">
-        {{ mode === 'create' ? 'Add OpenID Provider' : 'Edit OpenID Provider' }}
+        {{ mode === 'create' ? 'Add SAML Provider' : 'Edit SAML Provider' }}
       </h3>
       <p class="mt-1 text-sm text-gray-600">
-        Configure your OpenID Connect authentication provider details
+        Configure your SAML authentication provider details
       </p>
     </div>
 
@@ -123,41 +126,25 @@ const handleDiscard = () => {
         readonly
         class="block"
         label="Redirect URL"
-        hint="Copy the Redirect URL to configure your OIDC provider "
+        hint="Copy the Redirect URL to configure your SAML provider"
       />
 
       <BaseInput
-        id="discoveryEndpoint"
-        v-model="formData.discoveryEndpoint"
-        class="block"
-        label="Discovery Endpoint"
-        hint="Paste here your discovery endpoint"
-        placeholder="https://accounts.google.com/.well-known/openid-configuration"
+          id="key"
+          v-model="entityId"
+          readonly
+          class="block"
+          label="Entity ID"
+          hint="Copy the Entity ID URL to configure your SAML provider"
       />
 
       <BaseInput
-        id="clientId"
-        v-model="formData.clientId"
+        id="metadataURL"
+        v-model="formData.metadataURL"
         class="block"
-        label="Client Id"
-        hint="The client ID you received when registering your application with your provider"
-      />
-
-      <BaseInput
-        id="clientSecret"
-        v-model="formData.clientSecret"
-        autocomplete="new-password"
-        type="password"
-        class="block"
-        label="Client Secret"
-        hint="The client Secret you received when registering your application with your provider"
-      />
-
-      <BaseInput
-        id="prompt"
-        v-model="formData.prompt"
-        class="block"
-        label="Prompt"
+        label="Metadata URL"
+        hint="Paste here the Identity Provider Metadata URL"
+        placeholder="e.g. https://samltest.id/saml/idp"
       />
 
       <div class="flex items-center justify-between py-3 border-t border-gray-200">
