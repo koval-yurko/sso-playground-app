@@ -6,7 +6,7 @@ declare module 'nuxt/schema' {
   }
 
   interface PublicRuntimeConfig {
-    // Add public config here
+    baseUrl: string
   }
 }
 

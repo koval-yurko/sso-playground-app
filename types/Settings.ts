@@ -19,6 +19,10 @@ interface SettingsBase {
 
 export type Settings = OpenIDSettings | SAMLSettings;
 
+export type SettingsCreateDTO = OpenIDSettingsCreateDTO | SAMLSettingsCreateDTO;
+
+export type SettingsUpdateDTO = OpenIDSettingsUpdateDTO | SAMLSettingsUpdateDTO;
+
 export interface OpenIDSettings extends SettingsBase {
   type: 'openid';
   discoveryEndpoint?: string;

@@ -60,10 +60,7 @@ const handleSubmit = () => {
     type: 'saml',
     name: formData.value.name,
     key: formData.value.key || generateKey(formData.value.name),
-    discoveryEndpoint: formData.value.discoveryEndpoint,
-    clientId: formData.value.clientId,
-    clientSecret: formData.value.clientSecret,
-    prompt: formData.value.prompt,
+    metadataURL: formData.value.metadataURL,
     enabled: formData.value.enabled,
   }
 
@@ -72,9 +69,9 @@ const handleSubmit = () => {
   }
 
   if (props.item) {
-    emit('submit-update', data as OpenIDSettingsUpdateDTO)
+    emit('submit-update', data as SAMLSettingsUpdateDTO)
   } else {
-    emit('submit-create', data as OpenIDSettingsCreateDTO)
+    emit('submit-create', data as SAMLSettingsCreateDTO)
   }
 }
 
