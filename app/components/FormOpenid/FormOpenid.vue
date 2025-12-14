@@ -33,7 +33,7 @@ const isKeyManuallyEdited = ref(!!props.item?.key)
 const redirectUrl = computed(() => {
   const key = formData.value.key || generateKey(formData.value.name)
   const baseUrl = useRuntimeConfig().public.baseUrl || window.location.origin
-  
+
   return `${baseUrl}/api/auth/openid/${key}/callback`
 })
 

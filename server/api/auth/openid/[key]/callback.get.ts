@@ -35,12 +35,16 @@ export default defineEventHandler(async (event) => {
   const authService = useAuthService()
   const result = await authService.handleOpenIdCallback(key, code)
 
-  // TODO: Create user session, set cookies, etc.
-  // For now, return the authentication result
-  return {
-    success: true,
-    userInfo: result.userInfo,
-    // Don't expose tokens in response for security
-    // Store them in a session instead
-  }
+  // Set session cookie (not secure for localhost development)
+  const isProduction = process.env.NODE_ENV === 'production'
+  setCookie(event, 'session_id', result.sessionId, {
+    httpOnly: isProduction,
+    secure: isProduction,
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    path: '/',
+  })
+
+  // Redirect to home page
+  return sendRedirect(event, '/', 302)
 })

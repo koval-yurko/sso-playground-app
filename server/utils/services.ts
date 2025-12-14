@@ -1,5 +1,6 @@
 import { FirestoreSettingsRepository } from '../repositories/FirestoreSettingsRepository'
 import { FirestoreUsersRepository } from '../repositories/FirestoreUsersRepository'
+import { FirestoreUserSessionsRepository } from '../repositories/FirestoreUserSessionsRepository'
 import { SettingsService } from '../services/SettingsService'
 import { AuthService } from '../services/AuthService'
 
@@ -18,7 +19,8 @@ export function useAuthService(): AuthService {
   if (!authServiceInstance) {
     const settingsRepository = new FirestoreSettingsRepository()
     const usersRepository = new FirestoreUsersRepository()
-    authServiceInstance = new AuthService(settingsRepository, usersRepository)
+    const userSessionsRepository = new FirestoreUserSessionsRepository()
+    authServiceInstance = new AuthService(settingsRepository, usersRepository, userSessionsRepository)
   }
   return authServiceInstance
 }

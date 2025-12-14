@@ -1,5 +1,6 @@
 import type { SettingsRepository } from '~~/types/SettingsRepository'
 import type { UsersRepository } from '~~/types/UsersRepository'
+import type { UserSessionsRepository } from '~~/types/UserSessionsRepository'
 import { SettingTypes, type OpenIDSettings } from '~~/types/Settings'
 import { useRuntimeConfig } from '#imports'
 
@@ -16,6 +17,7 @@ export interface OpenIdCallbackResult {
     expiresIn: number
     refreshToken?: string
   }
+  sessionId: string
   userInfo: Record<string, unknown>
   issuer: string
 }
@@ -42,10 +44,12 @@ type OpenIdDiscoveryDocument = {
 export class AuthService {
   private settingsRepository: SettingsRepository
   private usersRepository: UsersRepository
+  private userSessionsRepository: UserSessionsRepository
 
-  constructor(settingsRepository: SettingsRepository, usersRepository: UsersRepository) {
+  constructor(settingsRepository: SettingsRepository, usersRepository: UsersRepository, userSessionsRepository: UserSessionsRepository) {
     this.settingsRepository = settingsRepository
     this.usersRepository = usersRepository
+    this.userSessionsRepository = userSessionsRepository
   }
 
   async handleOpenIdLogin(key: string): Promise<OpenIdLoginResult> {
@@ -54,8 +58,6 @@ export class AuthService {
     if (!setting || !setting.enabled || setting.type !== SettingTypes.OPEN_ID) {
       throw new Error(`OpenID setting with key "${key}" not found or not enabled`)
     }
-
-    // TODO: check user session, if already logged in, return existing session info
 
     if (!setting.discoveryEndpoint || !setting.clientId) {
       throw new Error('OpenID configuration is incomplete')
@@ -105,8 +107,20 @@ export class AuthService {
     // Fetch user info using the access token
     const userInfo = await this.getOpenIdUserInfo(tokenResponse.access_token, discoveryDoc.userinfo_endpoint)
 
-    // TODO: create or update user in the database using UsersRepository
-    // Store tokens in user session or secure storage (refresh_token)
+    const user = await this.usersRepository.createOrUpdate({
+      email: userInfo.email as string,
+      blocked: false,
+    })
+
+    const session = await this.userSessionsRepository.createOrUpdate({
+      settingType: setting.type,
+      settingKey: setting.key,
+      userId: user.id,
+      accessToken: tokenResponse.access_token,
+      idToken: tokenResponse.id_token,
+      expiresAt: Date.now() + tokenResponse.expires_in * 1000,
+      refreshToken: tokenResponse.refresh_token,
+    })
 
     return {
       tokens: {
@@ -116,6 +130,7 @@ export class AuthService {
         expiresIn: tokenResponse.expires_in,
         refreshToken: tokenResponse.refresh_token,
       },
+      sessionId: session.id,
       userInfo,
       issuer: discoveryDoc.issuer,
     }
