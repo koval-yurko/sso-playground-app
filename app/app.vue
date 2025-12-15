@@ -1,9 +1,9 @@
-<template>
-  <NuxtPage />
-</template>
 <script setup lang="ts">
 const route = useRoute()
 const router = useRouter()
+
+// Extract session_id cookie (works on both server and client)
+const sessionIdCookie = useCookie('session_id')
 
 onMounted(async () => {
   if (route.path === '/login') {
@@ -11,9 +11,7 @@ onMounted(async () => {
   }
 
   try {
-    // Get sessionId from cookie
-    const sessionId = useCookie('session_id').value
-
+    const sessionId = sessionIdCookie.value
     console.log('sessionId', sessionId)
 
     if (!sessionId) {
@@ -38,3 +36,7 @@ onMounted(async () => {
   }
 })
 </script>
+
+<template>
+  <NuxtPage />
+</template>

@@ -72,15 +72,6 @@
             Sign in
           </button>
         </div>
-
-        <div class="text-center">
-          <NuxtLink
-            to="/home"
-            class="text-sm text-blue-600 hover:text-blue-500"
-          >
-            Back to Home
-          </NuxtLink>
-        </div>
       </form>
     </div>
   </div>
