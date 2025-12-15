@@ -35,11 +35,11 @@ export default defineEventHandler(async (event) => {
   const authService = useAuthService()
   const result = await authService.handleOpenIdCallback(key, code)
 
-  // Set session cookie (not secure for localhost development)
+  // Set session cookie with proper security settings
   const isProduction = process.env.NODE_ENV === 'production'
   setCookie(event, 'session_id', result.sessionId, {
-    httpOnly: isProduction,
-    secure: isProduction,
+    httpOnly: true, // Always secure: prevents client-side JavaScript access
+    secure: isProduction, // HTTPS only in production
     sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 7, // 7 days
     path: '/',
