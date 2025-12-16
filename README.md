@@ -79,7 +79,7 @@ npm run build -- --preset=firebase
 
 firebase emulators:start --project sso-playground-b2050
 
-firebase apphosting:secrets:grantaccess --backend sso-playground-app TEST_SECRET --project sso-playground-b2050
+firebase apphosting:secrets:grantaccess --backend sso-playground-app BASE_URL --project sso-playground-b2050
 
 ## SSO Implementation TODO
 

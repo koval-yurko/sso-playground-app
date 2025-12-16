@@ -1,6 +1,8 @@
 import type { Settings, SettingsUpdateDTO } from '~~/types/Settings'
 
 export default defineEventHandler(async (event): Promise<Settings> => {
+  requireAuth(event)
+
   try {
     const id = getRouterParam(event, 'id')
 

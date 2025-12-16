@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { currentUser, logout } = useCurrentUser()
 </script>
 
 <template>
@@ -11,6 +12,17 @@
         <p class="text-gray-600 mb-8">
           Welcome to the SSO Playground Application
         </p>
+        <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+          <p class="text-sm text-gray-700">
+            <span class="font-semibold">Logged in as:</span> {{ currentUser.userEmail }}
+          </p>
+          <p class="text-xs text-gray-500 mt-1">
+            User ID: {{ currentUser.userId }}
+          </p>
+          <p class="text-xs text-gray-500 mt-1">
+            type: {{ currentUser.settingType }}, key: {{ currentUser.settingKey }}
+          </p>
+        </div>
         <div class="space-y-4">
            <NuxtLink
             to="/settings"
@@ -18,12 +30,12 @@
           >
             Settings
           </NuxtLink>
-          <NuxtLink
-              to="/"
-              class="block w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          <button
+            class="block w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            @click="logout"
           >
-            Log out (WIP)
-          </NuxtLink>
+            Log out
+          </button>
         </div>
       </div>
     </div>

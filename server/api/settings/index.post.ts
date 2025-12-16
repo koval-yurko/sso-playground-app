@@ -3,6 +3,8 @@ import type { Settings, SettingsCreateDTO } from '~~/types/Settings'
 type SettingCreateResponse = Settings
 
 export default defineEventHandler(async (event): Promise<SettingCreateResponse> => {
+  requireAuth(event)
+
   try {
     const body = await readBody<SettingsCreateDTO>(event)
 

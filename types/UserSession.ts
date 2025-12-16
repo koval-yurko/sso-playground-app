@@ -5,6 +5,7 @@ export interface UserSession {
   settingType: string;
   settingKey: string;
   userId: string
+  userEmail: string
   accessToken: string
   idToken: string
   expiresAt: number

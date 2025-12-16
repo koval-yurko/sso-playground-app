@@ -3,6 +3,7 @@ import type { Settings, SettingId, SettingsCreateDTO, SettingsUpdateDTO, Setting
 export interface SettingsRepository {
   getList(type: SettingType): Promise<Settings[]>
   getByKey(key: string): Promise<Settings | null>
+  getEnabled(): Promise<Settings[]>
   create(data: SettingsCreateDTO): Promise<Settings>
   update(id: SettingId, data: SettingsUpdateDTO): Promise<Settings>
   delete(id: SettingId): Promise<Settings>

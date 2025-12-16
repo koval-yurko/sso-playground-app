@@ -39,6 +39,20 @@ export class FirestoreSettingsRepository implements SettingsRepository {
     } as Settings
   }
 
+  async getEnabled(): Promise<Settings[]> {
+    const db = getFirestoreDB()
+    const snapshot = await db
+      .collection(this.collectionName)
+      .where('enabled', '==', true)
+      .orderBy('createdAt', 'asc')
+      .get()
+
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Settings[]
+  }
+
   async create(data: SettingsCreateDTO): Promise<Settings> {
     const db = getFirestoreDB()
 

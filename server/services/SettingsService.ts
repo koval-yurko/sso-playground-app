@@ -1,5 +1,12 @@
 import type { SettingsRepository } from '~~/types/SettingsRepository'
 import type { SettingType, SettingId, SettingsCreateDTO, SettingsUpdateDTO } from '~~/types/Settings'
+import {useRuntimeConfig} from '#imports'
+
+export type EnabledLoginMethod = {
+  type: SettingType
+  name: string
+  loginUrl: string
+}
 
 export class SettingsService {
   private settingsRepository: SettingsRepository
@@ -26,5 +33,17 @@ export class SettingsService {
 
   delete(id: SettingId) {
     return this.settingsRepository.delete(id)
+  }
+
+  async getEnabledMethods() {
+    const enabled = await this.settingsRepository.getEnabled()
+    const config = useRuntimeConfig()
+    const baseUrl = config.public.baseUrl
+
+    return enabled.map(setting => ({
+      type: setting.type,
+      name: setting.name,
+      loginUrl: `${baseUrl}/api/auth/${setting.type}/${setting.key}/login`,
+    }))
   }
 }

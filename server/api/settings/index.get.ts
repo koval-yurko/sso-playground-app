@@ -5,6 +5,8 @@ interface SettingsListResponse {
 }
 
 export default defineEventHandler(async (event): Promise<SettingsListResponse> => {
+  requireAuth(event)
+
   try {
     const query = getQuery(event)
     const type = (query.type as SettingType) || SettingTypes.OPEN_ID

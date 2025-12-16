@@ -100,11 +100,8 @@ export class AuthService {
 
     const discoveryDoc = await this.getOpenIdDiscoveryDocument(setting.discoveryEndpoint)
 
-
-    // Exchange authorization code for tokens
     const tokenResponse = await this.getOpenIdAccessToken(setting, code, discoveryDoc.token_endpoint)
 
-    // Fetch user info using the access token
     const userInfo = await this.getOpenIdUserInfo(tokenResponse.access_token, discoveryDoc.userinfo_endpoint)
 
     const user = await this.usersRepository.createOrUpdate({
@@ -116,6 +113,7 @@ export class AuthService {
       settingType: setting.type,
       settingKey: setting.key,
       userId: user.id,
+      userEmail: user.email,
       accessToken: tokenResponse.access_token,
       idToken: tokenResponse.id_token,
       expiresAt: Date.now() + tokenResponse.expires_in * 1000,
@@ -134,6 +132,29 @@ export class AuthService {
       userInfo,
       issuer: discoveryDoc.issuer,
     }
+  }
+
+  async handleLogout(sessionId: string): Promise<void> {
+    try {
+      await this.userSessionsRepository.delete(sessionId)
+    }
+    catch (error) {
+      console.error('Error deleting session:', error)
+      throw error
+    }
+  }
+
+  async getValidSession(sessionId: string | undefined) {
+    if (!sessionId) {
+      return null
+    }
+    const session = await this.userSessionsRepository.getBySessionId(sessionId)
+
+    if (!session || session.expiresAt < Date.now()) {
+      return null
+    }
+
+    return session
   }
 
   private getOpenIdRedirectUri(key: string): string {
@@ -174,4 +195,5 @@ export class AuthService {
       },
     })
   }
+
 }
