@@ -7,13 +7,9 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Key parameter is required',
     })
   }
+  const authService = useAuthService()
+  const loginResult = await authService.handleSAMLLogin(key)
 
-  // Get callback query parameters (code, state, etc.)
-  const query = getQuery(event)
-
-  return {
-    key,
-    query,
-    message: 'OAuth callback endpoint',
-  }
+  // Redirect to the SAML IdP for authentication
+  return sendRedirect(event, loginResult.authorizationUrl)
 })

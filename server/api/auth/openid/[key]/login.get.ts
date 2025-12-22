@@ -10,8 +10,6 @@ export default defineEventHandler(async (event) => {
   const authService = useAuthService()
   const loginResult = await authService.handleOpenIdLogin(key)
 
-  // TODO: Store state in session for validation in callback
-
   // Redirect to the authorization endpoint
   return sendRedirect(event, loginResult.authorizationUrl)
 })

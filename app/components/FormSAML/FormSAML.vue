@@ -30,13 +30,13 @@ const isKeyManuallyEdited = ref(!!props.item?.key)
 const redirectUrl = computed(() => {
   const key = formData.value.key || generateKey(formData.value.name)
   const baseUrl = useRuntimeConfig().public.baseUrl || window.location.origin
-  return `${baseUrl}/auth/saml/${key}/acs`
+  return `${baseUrl}/api/auth/saml/${key}/acs`
 })
 
 const entityId = computed(() => {
   const key = formData.value.key || generateKey(formData.value.name)
   const baseUrl = useRuntimeConfig().public.baseUrl || window.location.origin
-  return `${baseUrl}/auth/saml/${key}/metadata`
+  return `${baseUrl}/api/auth/saml/${key}/metadata`
 })
 
 watch(() => formData.value.name, (newName) => {
