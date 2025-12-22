@@ -1,5 +1,5 @@
 import type { H3Event } from 'h3'
-import type { AuthUser } from '~/server/middleware/auth'
+import type { AuthUser } from '~~/server/middleware/auth'
 
 /**
  * Ensures the request has an authenticated user.

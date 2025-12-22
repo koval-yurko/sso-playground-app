@@ -12,7 +12,7 @@ const { currentUser, logout } = useCurrentUser()
         <p class="text-gray-600 mb-8">
           Welcome to the SSO Playground Application
         </p>
-        <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+        <div v-if="currentUser" class="mb-6 p-4 bg-blue-50 rounded-lg">
           <p class="text-sm text-gray-700">
             <span class="font-semibold">Logged in as:</span> {{ currentUser.userEmail }}
           </p>

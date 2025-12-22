@@ -14,7 +14,7 @@ export class FirestoreUsersRepository implements UsersRepository {
       .limit(1)
       .get()
 
-    if (snapshot.empty) {
+    if (snapshot.empty || !snapshot.docs[0]) {
       return null
     }
 

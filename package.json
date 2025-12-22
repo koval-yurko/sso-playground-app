@@ -8,10 +8,12 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
     "lint": "eslint --fix .",
     "firebase:emulators": "firebase emulators:start --project sso-playground-b2050"
   },
   "dependencies": {
+    "@node-saml/node-saml": "^5.1.0",
     "@nuxt/eslint": "^1.11.0",
     "@nuxt/hints": "^1.0.0-alpha.2",
     "@nuxt/scripts": "^0.13.0",

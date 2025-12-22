@@ -1,4 +1,4 @@
-import type { AuthUser } from '~/server/middleware/auth'
+import type { AuthUser } from '~~/server/middleware/auth'
 
 export function useCurrentUser() {
   // Get user from server context during SSR and persist to client

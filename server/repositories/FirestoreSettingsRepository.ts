@@ -28,7 +28,7 @@ export class FirestoreSettingsRepository implements SettingsRepository {
       .limit(1)
       .get()
 
-    if (snapshot.empty) {
+    if (snapshot.empty || !snapshot.docs[0]) {
       return null
     }
 

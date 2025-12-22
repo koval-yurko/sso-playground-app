@@ -31,7 +31,7 @@ export class FirestoreUserSessionsRepository implements UserSessionsRepository {
       .limit(1)
       .get()
 
-    if (!snapshot.empty) {
+    if (!snapshot.empty && snapshot.docs[0]) {
       // Update existing session
       const doc = snapshot.docs[0]
       const updateData = {

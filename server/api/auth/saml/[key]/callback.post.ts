@@ -21,12 +21,18 @@ export default defineEventHandler(async (event) => {
 
   // Process the SAML response and create session
   const authService = useAuthService()
-  const callbackResult = await authService.handleSAMLCallback(key, samlResponse)
+  const result = await authService.handleSAMLCallback(key, samlResponse)
 
-  // Redirect user to the application home page with session
-  // You can customize this redirect URL based on your application needs
-  const config = useRuntimeConfig()
-  const redirectUrl = `${config.public.baseUrl}/?sessionId=${callbackResult.sessionId}`
+  // Set session cookie with proper security settings
+  const isProduction = process.env.NODE_ENV === 'production'
+  setCookie(event, 'session_id', result.sessionId, {
+    httpOnly: true, // Always secure: prevents client-side JavaScript access
+    secure: isProduction, // HTTPS only in production
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    path: '/',
+  })
 
-  return sendRedirect(event, redirectUrl)
+  // Redirect to home page
+  return sendRedirect(event, '/', 302)
 })
